@@ -1,5 +1,6 @@
 FROM tomcat:8.5-jre8
 # Tomcat 8.5.31
+# @TODO rebase this entirely on a new base: cent/deb/ubuntu/alpine (nb: alpine is contractor work in phase II)
 
 LABEL "io.github.islandora-collaboration-group.name"="isle-tomcat-base" \
      "io.github.islandora-collaboration-group.description"="ISLE Tomcat Base" \
@@ -7,6 +8,7 @@ LABEL "io.github.islandora-collaboration-group.name"="isle-tomcat-base" \
      "io.github.islandora-collaboration-group.vcs-url"="git@github.com:Islandora-Collaboration-Group/ISLE.git" \
      "io.github.islandora-collaboration-group.vendor"="Islandora Collaboration Group (ICG) - islandora-consortium-group@googlegroups.com" \
      "io.github.islandora-collaboration-group.maintainer"="Islandora Collaboration Group (ICG) - islandora-consortium-group@googlegroups.com"
+     # @TODO traefik labels.
 
 # Set up ENV for Apache Tomcat:
 ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle \
@@ -23,30 +25,27 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle \
 
 ###
 # Generic Tomcat and dependency installation.
-RUN GENERIC_DEPENDS="software-properties-common \
-     curl \
-     wget" && \
-    # https://github.com/phusion/baseimage-docker/issues/58
-    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+RUN GEN_DEP_PACKS="git \
+    vim" && \
     apt-get update && \
-    apt-get install -y $GENERIC_DEPENDS && \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
+    apt-get install -y --no-install-recommends $GEN_DEP_PACKS
 
 ###
-# Java - @TODO deprecate this and download the appropriate tar file and "install" it.  This is --
+# Java replacement: Oracle Java.
 RUN JAVA_PACKS="oracle-java8-installer \
-     oracle-java8-set-default" && \
+    oracle-java8-set-default" && \
+    echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 boolean true' | debconf-set-selections && \
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
     echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" > /etc/apt/sources.list.d/webupd8team-java.list && \
     echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 && \
-    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
-    echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 select true' | debconf-set-selections && \
     apt-get update && \
+    apt-get install -y --no-install-recommends $JAVA_PACKS && \
     apt-get purge -y --auto-remove openjdk* && \
-    apt-get install -y $JAVA_PACKS && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/oracle-jdk8-installer && \
     rm /docker-java-home && \
     ln -s /usr/lib/jvm/java-8-oracle /docker-java-home && \
     # Clean Tomcat of docs and examples.
