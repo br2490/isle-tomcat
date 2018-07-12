@@ -44,8 +44,7 @@ RUN JAVA_PACKS="oracle-java8-installer \
     apt-get purge -y --auto-remove openjdk* && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /var/cache/oracle-jdk8-installer && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/oracle-jdk8-installer && \
     rm /docker-java-home && \
     ln -s /usr/lib/jvm/java-8-oracle /docker-java-home && \
     # Clean Tomcat of docs and examples.
