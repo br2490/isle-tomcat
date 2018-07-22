@@ -22,6 +22,7 @@ RUN GEN_DEP_PACKS="software-properties-common \
     cron \
     curl \
     wget \
+    unzip \
     libapr1-dev \
     libssl-dev \
     gcc \
