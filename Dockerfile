@@ -72,7 +72,7 @@ RUN mkdir -p /usr/local/tomcat && \
     curl -o /tmp/apache-tomcat-8.5.32.tar.gz -L http://mirrors.koehn.com/apache/tomcat/tomcat-8/v8.5.32/bin/apache-tomcat-8.5.32.tar.gz && \
     tar xzf /tmp/apache-tomcat-8.5.32.tar.gz -C /usr/local/tomcat --strip-components=1 && \
     ## Creating TOMCAT user, THIS IS NOT FINISHED! See @TODO below, please.
-    # useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/bash tomcat && \
+    useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/bash tomcat && \
     # # @TODO move this to S6 please.
     # # Ownership to TOMCAT
     # chown -R :tomcat $CATALINA_BASE && \
