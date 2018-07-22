@@ -43,15 +43,15 @@ RUN touch /var/log/cron.log && \
 
 # Environment
 ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle \
-    JRE_HOME=/usr/lib/jvm/java-8-oracle/jre \
-    CLASSPATH=/usr/lib/jvm/java-8-oracle/jre/lib \
-    JRE_PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin \
-    CATALINA_HOME=/usr/local/tomcat \
-    CATALINA_PID=/usr/local/tomcat/temp/tomcat.pid \
-    CATALINA_BASE=/usr/local/tomcat \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/tomcat/lib:/usr/local/apr/lib \
-    PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/usr/local/tomcat/bin \
-    JAVA_OPTS="-Djava.awt.headless=true -server -Xmx1024M -XX:+UseParallelGC -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
+     JRE_HOME=/usr/lib/jvm/java-8-oracle/jre \
+     CLASSPATH=/usr/lib/jvm/java-8-oracle/jre/lib \
+     JRE_PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin \
+     CATALINA_HOME=/usr/local/tomcat \
+     CATALINA_BASE=/usr/local/tomcat \
+     CATALINA_PID=/usr/local/tomcat/temp/tomcat.pid \
+     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/tomcat/lib:/usr/local/apr/lib \
+     PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/usr/local/tomcat/bin \
+     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx1024M -XX:MaxPermSize=256m -XX:+UseConcMarkSweepGC -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
 
 # JAVA PHASE
 # Oracle Java 8
@@ -71,10 +71,18 @@ RUN mkdir -p /usr/local/tomcat && \
     mkdir -p /tmp/tomcat-native && \
     curl -o /tmp/apache-tomcat-8.5.32.tar.gz -L http://mirrors.koehn.com/apache/tomcat/tomcat-8/v8.5.32/bin/apache-tomcat-8.5.32.tar.gz && \
     tar xzf /tmp/apache-tomcat-8.5.32.tar.gz -C /usr/local/tomcat --strip-components=1 && \
-    useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/false tomcat && \
-    chgrp -R tomcat /usr/local/tomcat && \
-    chmod -R 760 /usr/local/tomcat/conf && \
-    chmod 750 /usr/local/tomcat/conf && \
+    ## Creating TOMCAT user, THIS IS NOT FINISHED! See @TODO below, please.
+    # useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/bash tomcat && \
+    # # @TODO move this to S6 please.
+    # # Ownership to TOMCAT
+    # chown -R :tomcat $CATALINA_BASE && \
+    # # No group write to CONF
+    # chmod -R 2750 $CATALINA_BASE/conf && \
+    # # Group write to logs, temp, webapps, work.
+    # chmod -R 2770 $CATALINA_BASE/logs && \
+    # chmod -R 2770 $CATALINA_BASE/temp && \
+    # chmod -R 2770 $CATALINA_BASE/webapps && \
+    # chmod -R 2770 $CATALINA_BASE/work && \
     tar xzf /usr/local/tomcat/bin/tomcat-native.tar.gz -C /tmp/tomcat-native --strip-components=1 && \
     cd /tmp/tomcat-native/native && \
     ./configure && \
