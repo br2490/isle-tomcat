@@ -1,8 +1,9 @@
 # ISLE Tomcat Base Image
+## version: RC 2018-07-28 13:55:00
 
 Based on:  
- - [Tomcat 8.5.31](https://hub.docker.com/_/tomcat/)
- - Oracle Java
+ - [Tomcat 8.5.31](https://tomcat.apache.org/)
+ - Oracle Java 8
 
 # Generic Usage
 

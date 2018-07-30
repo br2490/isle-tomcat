@@ -23,6 +23,7 @@ RUN GEN_DEP_PACKS="software-properties-common \
     curl \
     wget \
     unzip \
+    git \
     libapr1-dev \
     libssl-dev \
     gcc \
@@ -35,7 +36,7 @@ RUN GEN_DEP_PACKS="software-properties-common \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ## tmpreaper - cleanup /tmp on the running container
-# @todo as Gavin is this is actually doing anything.
+# @todo ask Gavin is this is still necessary and/or what the intention was/is!
 RUN touch /var/log/cron.log && \
     touch /etc/cron.d/tmpreaper-cron && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | tee /etc/cron.d/tmpreaper-cron && \
