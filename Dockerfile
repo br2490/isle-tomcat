@@ -17,7 +17,6 @@ RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
 ## General Package Installation, Dependencies, Requires.
 RUN GEN_DEP_PACKS="software-properties-common \
     tmpreaper \
-    dnsutils \
     ca-certificates \
     cron \
     curl \
@@ -52,7 +51,9 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle \
      CATALINA_PID=/usr/local/tomcat/temp/tomcat.pid \
      LD_LIBRARY_PATH=/usr/local/tomcat/lib:$LD_LIBRARY_PATH \
      PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/usr/local/tomcat/bin \
-     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx1024M -XX:MaxPermSize=256m -XX:+UseConcMarkSweepGC -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
+     ## Per Gavin, we are no longer using -XX:+UseConcMarkSweepGC, instead G1GC.
+     ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
+     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -Xms2048m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
 
 # JAVA PHASE
 # Oracle Java 8
@@ -63,6 +64,7 @@ RUN JAVA_PACKAGES="oracle-java8-installer \
     apt-get update && \
     apt-get install --no-install-recommends -y $JAVA_PACKAGES && \
     ## Cleanup phase.
+    add-apt-repository --remove -y ppa:webupd8team/java && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/oracle-jdk8-installer
 
