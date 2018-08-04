@@ -1,13 +1,16 @@
-ARG BASE=ubuntu:bionic
-FROM $BASE as isle-tomcat-base
+FROM ubuntu:bionic as isle-tomcat-base
 
-##
-LABEL "io.github.islandora-collaboration-group.name"="isle-tomcat base" \
-      "io.github.islandora-collaboration-group.license"="GPL3" \
-      "io.github.islandora-collaboration-group.vcs-url"="git@github.com:Islandora-Collaboration-Group/ISLE.git" \
-      "io.github.islandora-collaboration-group.vendor"="Islandora Collaboration Group (ICG) - islandora-consortium-group@googlegroups.com" \
-      "io.github.islandora-collaboration-group.maintainer"="Islandora Collaboration Group (ICG) - islandora-consortium-group@googlegroups.com"
-##
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name="ISLE Apache Tomcat Base Image" \
+      org.label-schema.url="https://islandora-collaboration-group.github.io" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="https://github.com/Islandora-Collaboration-Group/isle-tomcat" \
+      org.label-schema.vendor="Islandora Collaboration Group (ICG) - islandora-consortium-group@googlegroups.com" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.schema-version="1.0"
 
 ## S6-Overlay @see: https://github.com/just-containers/s6-overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/v1.21.4.0/s6-overlay-amd64.tar.gz /tmp/
