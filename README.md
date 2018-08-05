@@ -1,6 +1,4 @@
 # ISLE Tomcat Base Image
-## Release Candidate
-Build: 2018-08-04:10:23EST-4
 
 Based on:  
  - [Tomcat 8.5.31](https://tomcat.apache.org/)

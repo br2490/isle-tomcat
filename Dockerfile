@@ -3,13 +3,13 @@ FROM ubuntu:bionic as isle-tomcat-base
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
-LABEL org.label-schema.build-date=$BUILD_DATE \
+LABEL org.label-schema.build-date="2018-08-05T17:13:02Z" \
       org.label-schema.name="ISLE Apache Tomcat Base Image" \
       org.label-schema.url="https://islandora-collaboration-group.github.io" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/Islandora-Collaboration-Group/isle-tomcat" \
       org.label-schema.vendor="Islandora Collaboration Group (ICG) - islandora-consortium-group@googlegroups.com" \
-      org.label-schema.version=$VERSION \
+      org.label-schema.version="RC-20180805T171302Z" \
       org.label-schema.schema-version="1.0"
 
 ## S6-Overlay @see: https://github.com/just-containers/s6-overlay
@@ -56,7 +56,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle \
      PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/usr/local/tomcat/bin \
      ## Per Gavin, we are no longer using -XX:+UseConcMarkSweepGC, instead G1GC.
      ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
-     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -Xms2048m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
+     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -Xms1048m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
 
 # JAVA PHASE
 # Oracle Java 8
