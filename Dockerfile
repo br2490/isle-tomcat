@@ -19,13 +19,14 @@ RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
 
 ## General Package Installation, Dependencies, Requires.
 RUN GEN_DEP_PACKS="software-properties-common \
-    tmpreaper \
     ca-certificates \
+    dnsutils \
     cron \
     curl \
     wget \
     unzip \
     git \
+    tmpreaper \
     libapr1-dev \
     libssl-dev \
     gcc \
@@ -42,6 +43,7 @@ RUN GEN_DEP_PACKS="software-properties-common \
 RUN touch /var/log/cron.log && \
     touch /etc/cron.d/tmpreaper-cron && \
     echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /tmp >> /var/log/cron.log 2>&1" | tee /etc/cron.d/tmpreaper-cron && \
+    echo "0 */12 * * * root /usr/sbin/tmpreaper -am 4d /usr/local/tomcat/temp >> /var/log/cron.log 2>&1" | tee /etc/cron.d/tmpreaper-cron && \
     chmod 0644 /etc/cron.d/tmpreaper-cron
 
 # Environment
@@ -51,12 +53,12 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle \
      JRE_PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin \
      CATALINA_HOME=/usr/local/tomcat \
      CATALINA_BASE=/usr/local/tomcat \
-     CATALINA_PID=/usr/local/tomcat/temp/tomcat.pid \
+     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
      LD_LIBRARY_PATH=/usr/local/tomcat/lib:$LD_LIBRARY_PATH \
      PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/usr/local/tomcat/bin \
      ## Per Gavin, we are no longer using -XX:+UseConcMarkSweepGC, instead G1GC.
      ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
-     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -Xms1048m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
+     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
 
 # JAVA PHASE
 # Oracle Java 8
