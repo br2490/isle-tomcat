@@ -1,0 +1,10 @@
+#!/bin/bash
+
+DATE_RFC3339=(`date -u +"%Y-%m-%dT%H:%M:%SZ"`)
+VERSION=RC-$DATE_RFC3339
+
+docker build \
+	--build-arg BUILD_DATE=$(DATE_RFC3339) \
+	--build-arg VCS_REF=$SOURCE_COMMIT \
+	--build-arg VERSION=$(VERSION) \
+	-t $IMAGE_NAME .

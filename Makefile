@@ -1,3 +1,5 @@
+## Used for local building and testing during development.
+
 DATE_RFC3339=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
 VERSION_DATE=`date -u +"%Y%m%dT%H%M%SZ"`
 VERSION ?= RC-$(DATE_RFC3339)
