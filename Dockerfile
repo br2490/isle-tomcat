@@ -92,7 +92,7 @@ RUN mkdir -p /usr/local/tomcat && \
     ## Cleanup phase.
     rm $CATALINA_HOME/bin/tomcat-native.tar.gz && \
     rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/bin/*.bat && \
-    apt-get purge -y --auto-remove gcc gcc-7-base make software-properties-common openjdk* && \
+    apt-get purge -y --auto-remove libapr1-dev libssl-dev gcc gcc-7-base make software-properties-common openjdk* && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
