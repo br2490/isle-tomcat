@@ -18,7 +18,6 @@ Size: 499MB
 
 ## Important Paths
   - $CATALINA_HOME is `/usr/local/tomcat`
-  - $JAVA_HOME is `/usr/lib/jvm/java-8-oracle`
 
 ## Java Options
 Based on reading and testing, with the help and direction of [@g7Morris](https://github.com/g7morris)!
@@ -28,7 +27,7 @@ Based on reading and testing, with the help and direction of [@g7Morris](https:/
 ## Generic Usage
 
 ```
-docker run -p 8080:8080 -it --rm islandoracollabgroup/isle-tomcat
+docker run -p 8080:8080 -it --rm islandoracollabgroup/isle-tomcat:{version} bash
 ```
 
 ### Default Login information
