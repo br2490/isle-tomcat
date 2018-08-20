@@ -4,16 +4,19 @@
 Designed as a base for ISLE components requiring Tomcat and Oracle Java.
 
 Based on:  
- - Ubuntu 18.04 "Bionic"
+  - [ISLE-ubuntu-basebox](https://hub.docker.com/r/benjaminrosner/isle-ubuntu-basebox/)
+    - Ubuntu 18.04 "Bionic"
+    - General Dependencies (@see [ISLE-ubuntu-basebox](https://hub.docker.com/r/benjaminrosner/isle-ubuntu-basebox/))
+    - Oracle Java Server JRE.
  - [Tomcat 8.5.31](https://tomcat.apache.org/)
- - Oracle Java 8.x latest (via APT repo.)
 
 Contains and Includes:
-  - [S6 Overlay](https://github.com/just-containers/s6-overlay) to manage services
   - `cron` and `tmpreaper` to clean /tmp *and* /usr/local/tomcat/temp
   - Tomcat Native library
 
-Important Paths:
+Size: 499MB
+
+## Important Paths
   - $CATALINA_HOME is `/usr/local/tomcat`
   - $JAVA_HOME is `/usr/lib/jvm/java-8-oracle`
 
@@ -28,7 +31,12 @@ Based on reading and testing, with the help and direction of [@g7Morris](https:/
 docker run -p 8080:8080 -it --rm islandoracollabgroup/isle-tomcat
 ```
 
-## Tomcat default users
+### Default Login information
 
-admin:isle_admin  
-manager:isle_manager  
+Tomcat Admin
+  - Username: admin
+  - Password: isle_admin 
+
+Tomcat Manager
+  - Username: manager
+  - Password: isle_manager  
