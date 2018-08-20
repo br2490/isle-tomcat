@@ -1,4 +1,4 @@
-FROM ubuntu:bionic as isle-tomcat-base
+FROM benjaminrosner/isle-ubuntu-basebox:serverjre8
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -12,20 +12,8 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.version=$VERSION \
       org.label-schema.schema-version="1.0"
 
-## S6-Overlay @see: https://github.com/just-containers/s6-overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/v1.21.4.0/s6-overlay-amd64.tar.gz /tmp/
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && \
-    rm /tmp/s6-overlay-amd64.tar.gz
-
 ## General Package Installation, Dependencies, Requires.
-RUN GEN_DEP_PACKS="software-properties-common \
-    ca-certificates \
-    dnsutils \
-    cron \
-    curl \
-    wget \
-    unzip \
-    git \
+RUN GEN_DEP_PACKS="cron \
     tmpreaper \
     libapr1-dev \
     libssl-dev \
@@ -47,31 +35,14 @@ RUN touch /var/log/cron.log && \
     chmod 0644 /etc/cron.d/tmpreaper-cron
 
 # Environment
-ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle \
-     JRE_HOME=/usr/lib/jvm/java-8-oracle/jre \
-     CLASSPATH=/usr/lib/jvm/java-8-oracle/jre/lib \
-     JRE_PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin \
-     CATALINA_HOME=/usr/local/tomcat \
-     CATALINA_BASE=/usr/local/tomcat \
-     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
-     LD_LIBRARY_PATH=/usr/local/tomcat/lib:$LD_LIBRARY_PATH \
-     PATH=$PATH:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/usr/local/tomcat/bin \
-     ## Per Gavin, we are no longer using -XX:+UseConcMarkSweepGC, instead G1GC.
-     ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
-     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
-
-# JAVA PHASE
-# Oracle Java 8
-RUN JAVA_PACKAGES="oracle-java8-installer \
-    oracle-java8-set-default" && \
-    echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 boolean true' | debconf-set-selections && \
-    add-apt-repository -y ppa:webupd8team/java && \
-    apt-get update && \
-    apt-get install --no-install-recommends -y $JAVA_PACKAGES && \
-    ## Cleanup phase.
-    add-apt-repository --remove -y ppa:webupd8team/java && \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/oracle-jdk8-installer
+ENV CATALINA_HOME=/usr/local/tomcat \
+    CATALINA_BASE=/usr/local/tomcat \
+    CATALINA_PID=/usr/local/tomcat/tomcat.pid \
+    LD_LIBRARY_PATH=/usr/local/tomcat/lib:$LD_LIBRARY_PATH \
+    PATH=$PATH:/usr/local/tomcat/bin \
+    ## Per Gavin, we are no longer using -XX:+UseConcMarkSweepGC, instead G1GC.
+    ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
+    JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
 
 # TOMCAT PHASE
 # Apache Tomcat 8.5.32
@@ -92,7 +63,7 @@ RUN mkdir -p /usr/local/tomcat && \
     ## Cleanup phase.
     rm $CATALINA_HOME/bin/tomcat-native.tar.gz && \
     rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/bin/*.bat && \
-    apt-get purge -y --auto-remove gcc gcc-7-base make software-properties-common openjdk* && \
+    apt-get purge -y --auto-remove gcc gcc-7-base make && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
