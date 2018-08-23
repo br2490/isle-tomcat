@@ -3,6 +3,8 @@ FROM benjaminrosner/isle-ubuntu-basebox:serverjre8
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
+ARG TOMCAT_MAJOR
+ARG TOMCAT_VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="ISLE Apache Tomcat Base Image" \
       org.label-schema.url="https://islandora-collaboration-group.github.io" \
@@ -35,7 +37,9 @@ RUN touch /var/log/cron.log && \
     chmod 0644 /etc/cron.d/tmpreaper-cron
 
 # Environment
-ENV CATALINA_HOME=/usr/local/tomcat \
+ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
+	TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.33} \
+    CATALINA_HOME=/usr/local/tomcat \
     CATALINA_BASE=/usr/local/tomcat \
     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
     LD_LIBRARY_PATH=/usr/local/tomcat/lib:$LD_LIBRARY_PATH \
@@ -45,11 +49,12 @@ ENV CATALINA_HOME=/usr/local/tomcat \
     JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
 
 # TOMCAT PHASE
-# Apache Tomcat 8.5.32
+# Apache Tomcat
 RUN mkdir -p /usr/local/tomcat && \
     mkdir -p /tmp/tomcat-native && \
-    curl -o /tmp/apache-tomcat-8.5.32.tar.gz -L http://mirrors.koehn.com/apache/tomcat/tomcat-8/v8.5.32/bin/apache-tomcat-8.5.32.tar.gz && \
-    tar xzf /tmp/apache-tomcat-8.5.32.tar.gz -C /usr/local/tomcat --strip-components=1 && \
+    cd /tmp && \
+    curl -O -L "https://www.apache.org/dyn/closer.cgi?action=download&filename=tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz" && \
+    tar xzf /tmp/apache-tomcat-$TOMCAT_VERSION.tar.gz -C /usr/local/tomcat --strip-components=1 && \
     useradd --comment 'Tomcat User' --no-create-home -d /usr/local/tomcat --user-group -s /bin/bash tomcat && \
     # Tomcat Native
     tar xzf /usr/local/tomcat/bin/tomcat-native.tar.gz -C /tmp/tomcat-native --strip-components=1 && \
@@ -60,6 +65,7 @@ RUN mkdir -p /usr/local/tomcat && \
     echo "/usr/local/tomcat/lib" > /etc/ld.so.conf.d/tomcat-native.conf && \
     ldconfig && \
     echo 'LD_LIBRARY_PATH=$CATALINA_HOME/lib:$LD_LIBRARY_PATH\nexport LD_LIBRARY_PATH' > $CATALINA_HOME/bin/setenv.sh && \
+    chown -R tomcat:tomcat $CATALINA_HOME && \
     ## Cleanup phase.
     rm $CATALINA_HOME/bin/tomcat-native.tar.gz && \
     rm -rf $CATALINA_HOME/webapps/docs $CATALINA_HOME/webapps/examples $CATALINA_HOME/bin/*.bat && \

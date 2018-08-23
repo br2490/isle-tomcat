@@ -12,4 +12,6 @@ docker build \
 	--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 	--build-arg VCS_REF=$SOURCE_COMMIT \
 	--build-arg VERSION=RC-`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+	--build-arg TOMCAT_MAJOR=8 \
+	--build-arg TOMCAT_VERSION=8.5.33 \
 	-t $IMAGE_NAME .
