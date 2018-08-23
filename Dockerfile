@@ -1,4 +1,4 @@
-FROM benjaminrosner/isle-ubuntu-basebox:serverjre8
+FROM benjaminrosner/isle-ubuntu-basebox:serverjdk8
 
 ARG BUILD_DATE
 ARG VCS_REF
