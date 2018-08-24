@@ -1,4 +1,8 @@
 #!/usr/bin/with-contenv sh
 
-echo "Starting Tomcat."
-s6-setuidgid tomcat catalina.sh run
+# echo "Starting Tomcat."
+# Unable to Drop-Privs during re-factor. Some image work fine, others not.
+# s6-setuidgid tomcat catalina.sh run
+
+echo "Starting Tomcat Privileged."
+catalina.sh run
