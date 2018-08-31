@@ -44,9 +44,11 @@ ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
     LD_LIBRARY_PATH=/usr/local/tomcat/lib:$LD_LIBRARY_PATH \
     PATH=$PATH:/usr/local/tomcat/bin \
+    JAVA_MAX_MEM=${JAVA_MAX_MEM:-2G} \
+    JAVA_MIN_MEM=${JAVA_MIN_MEM:-256M} \
     ## Per Gavin, we are no longer using -XX:+UseConcMarkSweepGC, instead G1GC.
     ## Ben's understanding after reading and review: though the new G1GC causes greater pauses it GC, it has lower latency delay and pauses in GC over CMSGC.
-    JAVA_OPTS="-Djava.awt.headless=true -server -Xmx4096M -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"
+    JAVA_OPTS='-Djava.awt.headless=true -server -Xmx${JAVA_MAX_MEM} -Xms${JAVA_MIN_MEM} -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true'
 
 # TOMCAT PHASE
 # Apache Tomcat
