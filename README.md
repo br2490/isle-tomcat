@@ -15,7 +15,7 @@ Contains and Includes:
   - Tomcat Native library
   - [confd](http://www.confd.io/)
 
-Size: 499MB
+Size: 735MB
 
 ## Important Paths
   - $CATALINA_HOME is `/usr/local/tomcat`
