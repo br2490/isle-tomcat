@@ -13,6 +13,7 @@ Based on:
 Contains and Includes:
   - `cron` and `tmpreaper` to clean /tmp *and* /usr/local/tomcat/temp
   - Tomcat Native library
+  - [confd](http://www.confd.io/)
 
 Size: 499MB
 
@@ -21,13 +22,13 @@ Size: 499MB
 
 ## Java Options
 Based on reading and testing, with the help and direction of [@g7Morris](https://github.com/g7morris)!
-  - $JAVA_OPTS are `-Djava.awt.headless=true -server -Xmx4096M -Xms512m -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true`
+  - $JAVA_OPTS are `-Djava.awt.headless=true -server -Xmx2G -Xms256M -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=70 -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true`
   - **NB**: these are not to be confused with $CATALINA_OPTS
 
 ## Generic Usage
 
 ```
-docker run -p 8080:8080 -it --rm islandoracollabgroup/isle-tomcat:{version} bash
+docker run -p 8080:8080 -it --rm islandoracollabgroup/isle-tomcat:serverjdk8 bash
 ```
 
 ### Default Login information
