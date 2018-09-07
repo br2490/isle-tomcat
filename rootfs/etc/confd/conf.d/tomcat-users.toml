@@ -1,0 +1,10 @@
+[template]
+src = "tomcat/tomcat-users.xml.tpl"
+dest = "/usr/local/tomcat/conf/tomcat-users.xml"
+mode = "0644"
+keys = [
+  "/tomcat/admin/user",
+  "/tomcat/admin/pass",
+  "/tomcat/manager/user",
+  "/tomcat/manager/pass"
+]
