@@ -1,4 +1,4 @@
-FROM benjaminrosner/isle-ubuntu-basebox:serverjre8
+FROM islandoracollabgroup/isle-ubuntu-basebox:serverjre8
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -41,7 +41,7 @@ RUN touch /var/log/cron.log && \
 
 # Environment
 ENV TOMCAT_MAJOR=${TOMCAT_MAJOR:-8} \
-    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.33} \
+    TOMCAT_VERSION=${TOMCAT_VERSION:-8.5.34} \
     CATALINA_HOME=/usr/local/tomcat \
     CATALINA_BASE=/usr/local/tomcat \
     CATALINA_PID=/usr/local/tomcat/tomcat.pid \
