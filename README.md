@@ -8,7 +8,7 @@ Based on:
     - Ubuntu 18.04 "Bionic"
     - General Dependencies (@see [ISLE-ubuntu-basebox](https://hub.docker.com/r/benjaminrosner/isle-ubuntu-basebox/))
     - Oracle Java Server JRE.
- - [Tomcat 8.5.33](https://tomcat.apache.org/)
+ - [Tomcat 8.5.34](https://tomcat.apache.org/)
 
 Contains and Includes:
   - `cron` and `tmpreaper` to clean /tmp *and* /usr/local/tomcat/temp
